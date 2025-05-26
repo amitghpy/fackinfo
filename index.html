@@ -1,54 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fake Name Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 100px;
-    }
-    #name {
-      font-size: 24px;
-      margin-top: 20px;
-      color: #333;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fake Name Generator (USA/England)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin:0; padding:0;
+    height:100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-direction: column;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .name-container {
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    font-size: 2.4rem;
+    letter-spacing: 1.2px;
+    user-select: none;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    cursor: default;
+  }
+  .name-part {
+    background: rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: text;
+  }
+  .name-part:hover {
+    background: rgba(255,255,255,0.6);
+  }
+  button {
+    background: #ff6f91;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 3rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(255,111,145,0.4);
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  button:hover {
+    background: #ff4273;
+    transform: scale(1.05);
+  }
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+  }
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+  }
+</style>
 </head>
 <body>
-  <h1>Fake Name Generator</h1>
-  <button onclick="generateName()">Generate</button>
-  <div id="name"></div>
 
-  <script>
-    const firstNames = [
-      'Rahim', 'Karim', 'Salman', 'Tariq', 'Nayeem', 'Arif', 'Sajib', 'Farhan', 'Aminul', 'Tamim',
-      'Imran', 'Rony', 'Sakib', 'Nasim', 'Parvez', 'Shuvo', 'Nashid', 'Asif', 'Himel', 'Shanto',
-      'Raihan', 'Tanvir', 'Ridoy', 'Sabbir', 'Nafis', 'Munna', 'Anik', 'Jubayer', 'Rubel', 'Milon',
-      'Biplob', 'Tushar', 'Hasib', 'Shahriar', 'Noman', 'Kawsar', 'Faisal', 'Bashir', 'Mehedi', 'Rasel',
-      'Maruf', 'Zahid', 'Rakib', 'Fahim', 'Rafat', 'Ruhul', 'Mamun', 'Shahadat', 'Nomanul', 'Sohan'
-    ];
+<h1>Fake Name Generator</h1>
 
-    const lastNames = [
-      'Ahmed', 'Chowdhury', 'Hossain', 'Khan', 'Miah', 'Hasan', 'Rahman', 'Kabir', 'Alam', 'Sarker',
-      'Begum', 'Akter', 'Uddin', 'Islam', 'Biswas', 'Patwary', 'Mazumder', 'Talukder', 'Bhuiyan', 'Mollah',
-      'Barman', 'Das', 'Paul', 'Chakma', 'Roy', 'Dewan', 'Siddique', 'Faruk', 'Jamal', 'Nasir',
-      'Bashar', 'Shah', 'Sami', 'Nazmul', 'Shikder', 'Nawaz', 'Mahmud', 'Zaman', 'Arafat', 'Tarique',
-      'Sharif', 'Selim', 'Ferdous', 'Rafiq', 'Kamal', 'Alvi', 'Rubayet', 'Mostofa', 'Shahriar', 'Monir'
-    ];
+<div class="name-container">
+  <div id="firstName" class="name-part" title="Click to copy first name"></div>
+  <div id="lastName" class="name-part" title="Click to copy last name"></div>
+</div>
 
-    function generateName() {
-      const first = firstNames[Math.floor(Math.random() * firstNames.length)];
-      const last = lastNames[Math.floor(Math.random() * lastNames.length)];
-      document.getElementById('name').innerText = first + ' ' + last;
-    }
-  </script>
+<button id="generateBtn">Generate Name</button>
+
+<div id="toast" class="toast">Copied!</div>
+
+<footer>Made with ❤️ by ChatGPT</footer>
+
+<script>
+  const firstNames = [
+    "James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles",
+    "Christopher","Daniel","Matthew","Anthony","Donald","Mark","Paul","Steven","Andrew","Kenneth",
+    "Joshua","Kevin","Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan",
+    "Jacob","Gary","Nicholas","Eric","Stephen","Jonathan","Larry","Justin","Scott","Brandon",
+    "Benjamin","Samuel","Gregory","Frank","Alexander","Raymond","Patrick","Jack","Dennis","Jerry",
+    "Tyler","Aaron","Jose","Henry","Douglas","Peter","Adam","Nathan","Zachary","Walter",
+    "Kyle","Harold","Carl","Jeremy","Keith","Roger","Gerald","Ethan","Arthur","Terry",
+    "Christian","Sean","Lawrence","Austin","Joe","Noah","Jesse","Albert","Bryan","Billy",
+    "Bruce","Willie","Jordan","Dylan","Alan","Ralph","Gabriel","Roy","Juan","Wayne",
+    "Eugene","Logan","Randy","Louis","Russell","Vincent","Philip","Bobby","Johnny","Bradley",
+    "Jimmy","Randall","Barry","Alexander","Bernard","Calvin","Craig","Dale","Derek","Derrick",
+    "Ernest","Fred","Garry","Glen","Gordon","Howard","Isaac","Ivan","Jackie","Jay",
+    "Jeffery","Jesse","Joel","Joe","Jorge","Karl","Kurt","Lance","Lee","Leonard",
+    "Leroy","Lloyd","Lucas","Luis","Luke","Manuel","Marc","Marcus","Mario","Marvin",
+    "Melvin","Micah","Miguel","Mitchell","Nathaniel","Neil","Nelson","Nicholas","Oscar","Otis",
+    "Phillip","Randolph","Ray","Reginald","Ricardo","Roberto","Ruben","Russell","Seth","Shawn",
+    "Sidney","Stanley","Stephen","Steven","Terrence","Theodore","Travis","Trent","Trevor","Tristan",
+    "Tyrone","Vernon","Victor","Vincent","Wade","Wallace","Walter","Warren","Wayne","Wesley",
+    "Willard","Willie","Zachary","Adrian","Alfred","Allen","Alvin","Andre","Angel",
+    "Antonio","Archie","Arnold","Arthur","Austin","Barry","Bobby","Bradley","Brandon","Brent",
+    "Brett","Brian","Brock","Bruce","Bryan","Calvin","Carl","Carlos","Casey","Cecil",
+    "Chad","Charles","Charlie","Chester","Chris","Christian","Christopher","Clarence","Clark","Clifford",
+    "Cody","Craig","Curtis","Dale","Dan","Daniel","Danny","Darren","Daryl","Dave",
+    "David","Dean","Dennis","Derek","Derrick","Derrick","Don","Donald","Douglas","Dwayne",
+    "Dylan","Earl","Ed","Eddie","Edward","Edwin","Elijah","Elliott","Eric","Erik",
+    "Ernest","Ethan","Eugene","Evan","Everett","Felix","Fernando","Frank","Fred","Gabriel",
+    "Garrett","Garry","Gavin","Gene","Geoffrey","George","Gerald","Gilbert","Glen","Glenn",
+    "Godfrey","Gordon","Gregory","Harold","Harry","Harvey","Henry","Herbert","Howard","Hugh",
+    "Ian","Isaac","Ivan","Jack","Jackson","Jacob","Jake","James","Jamie","Jared",
+    "Jason","Jasper","Jay","Jeff","Jeffery","Jeremy","Jerome","Jerry","Jesse","Jim",
+    "Jimmy","Joe","Joel","John","Johnny","Jonathan","Jordan","Joseph","Josh","Joshua",
+    "Juan","Julian","Justin","Keith","Kelly","Ken","Kenneth","Kent","Kevin","Kirk",
+    "Kyle","Lance","Larry","Laurence","Lawrence","Lee","Leon","Leonard","Leroy","Leslie",
+    "Lloyd","Logan","Lonnie","Louis","Lucas","Luis","Luke","Malcolm","Manuel","Marc",
+    "Marcus","Mario","Mark","Marlon","Marshall","Martin","Marvin","Matt","Matthew","Maurice",
+    "Max","Melvin","Michael","Micheal","Miguel","Mike","Mitchell","Nathan","Nathaniel","Neil",
+    "Nicholas","Nick","Noah","Norman","Oliver","Oscar","Owen","Patrick","Paul","Pedro",
+    "Perry","Peter","Philip","Phillip","Preston","Quentin","Rafael","Ralph","Randall","Randy",
+    "Ray","Raymond","Reggie","Rex","Ricardo","Richard","Rick","Ricky","Roberto","Robert",
+    "Robin","Rodney","Roger","Roland","Ronald","Ronnie","Ross","Roy","Russell","Ryan",
+    "Samuel","Scott","Sean","Seth","Shane","Shawn","Sidney","Stanley","Stephen","Steve",
+    "Steven","Stewart","Ted","Terence","Terrance","Terrence","Terry","Theodore","Thomas","Tim",
+    "Timothy","Todd","Tom","Tommy","Tony","Tracy","Travis","Trevor","Tristan","Troy",
+    "Tyler","Tyson","Vernon","Victor","Vincent","Wade","Wallace","Walter","Warren","Wayne",
+    "Wesley","Willard","William","Willie","Zachary"
+  ];
+
+  const lastNames = [
+    "Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez",
+    "Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin",
+    "Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson",
+    "Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores",
+    "Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts",
+    "Gomez","Phillips","Evans","Turner","Diaz","Parker","Cruz","Edwards","Collins","Reyes",
+    "Stewart","Morris","Morales","Murphy","Cook","Rogers","Gutierrez","Ortiz","Morgan","Cooper",
+    "Peterson","Bailey","Reed","Kelly","Howard","Ramos","Kim","Cox","Ward","Richardson",
+    "Watson","Brooks","Chavez","Wood","James","Bennett","Gray","Mendoza","Ruiz","Hughes",
+    "Price","Alvarez","Castillo","Sanders","Patel","Myers","Long","Ross","Foster","Jimenez",
+    "Powell","Jenkins","Perry","Russell","Sullivan","Bell","Coleman","Butler","Henderson","Barnes",
+    "Gonzales","Fisher","Vasquez","Simmons","Romero","Jordan","Patterson","Alexander","Hamilton","Graham",
+    "Reynolds","Griffin","Wallace","Moreno","West","Cole","Hayes","Bryant","Herrera","Gibson",
+    "Elliott","Tran","Medina","Burns","Crawford","Olson","Simpson","Porter","Hunter","Gordon",
+    "Mendez","Silva","Shaw","Snyder","Mason","Dixon","Munoz","Hunt","Hicks","Holmes",
+    "Palmer","Wagner","Black","Robertson","Boyd","Rose","Stone","Salazar","Fox","Warren",
+    "Mills","Meyer","Rice","Schmidt","Garza","Daniels","Ferguson","Nichols","Stephens","Soto",
+    "Weaver","Ryan","Gardner","Payne","Grant","Dunn","Kelley","Spencer","Hawkins","Arnold",
+    "Pierce","Vargas","Sullivan","Fields","Gutierrez","Ryan","Chavez","Pierce","Ramirez","Murray",
+    "Ford","Marshall","Owens","Mccoy","Blackwell","Hanson","Lynch","Burke","Franklin","Guerra",
+    "Powell","Webb","Walsh","Little","Hines","Sweeney","Barrett","Cummings","Walters","Moran",
+    "Bowman","Fleming","Hart","Hopkins","Keller","Moss","Sullivan","Jensen","Nicholson","Wilkins",
+    "Knight","Gilbert","Burton","Hanson","Dean","Castro","Austin","Bates","Hale","Rhodes",
+    "Pena","Jordan","Holmes","Johnston","Banks","Snyder","Sharp","Gregory","Williamson","Stephens",
+    "Marshall","Fields","Gilbert","Brock","Diaz","Greene","Hamilton","Gordon","Payne","Owens",
+    "Freeman","Morris","Washington","Porter","Harper","Grant","Marshall","Owens","Fernandez","Gutierrez",
+    "Palmer","McCarthy","Waters","Wells","Stone","Richards","Willis","Jordan","Craig","Simmons",
+    "Ferguson","Kennedy","Wallace","Gardner","George","Ellis","Rice","Hunter","Burke","Henry"
+  ];
+
+  const firstNameDiv = document.getElementById('firstName');
+  const lastNameDiv = document.getElementById('lastName');
+  const generateBtn = document.getElementById('generateBtn');
+  const toast = document.getElementById('toast');
+
+  function getRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+  }
+
+  function generateName() {
+    const first = getRandom(firstNames);
+    const last = getRandom(lastNames);
+    firstNameDiv.textContent = first;
+    lastNameDiv.textContent = last;
+  }
+
+  firstNameDiv.addEventListener('click', () => {
+    const text = firstNameDiv.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`First Name "${text}" copied!`);
+    });
+  });
+
+  lastNameDiv.addEventListener('click', () => {
+    const text = lastNameDiv.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`Last Name "${text}" copied!`);
+    });
+  });
+
+  generateBtn.addEventListener('click', generateName);
+
+  // Generate one on load
+  generateName();
+</script>
+
 </body>
 </html>
