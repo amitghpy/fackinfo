@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Name Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    #name {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fake Name Generator</h1>
+  <button onclick="generateName()">Generate</button>
+  <div id="name"></div>
+
+  <script>
+    const firstNames = [
+      'Rahim', 'Karim', 'Salman', 'Tariq', 'Nayeem', 'Arif', 'Sajib', 'Farhan', 'Aminul', 'Tamim',
+      'Imran', 'Rony', 'Sakib', 'Nasim', 'Parvez', 'Shuvo', 'Nashid', 'Asif', 'Himel', 'Shanto',
+      'Raihan', 'Tanvir', 'Ridoy', 'Sabbir', 'Nafis', 'Munna', 'Anik', 'Jubayer', 'Rubel', 'Milon',
+      'Biplob', 'Tushar', 'Hasib', 'Shahriar', 'Noman', 'Kawsar', 'Faisal', 'Bashir', 'Mehedi', 'Rasel',
+      'Maruf', 'Zahid', 'Rakib', 'Fahim', 'Rafat', 'Ruhul', 'Mamun', 'Shahadat', 'Nomanul', 'Sohan'
+    ];
+
+    const lastNames = [
+      'Ahmed', 'Chowdhury', 'Hossain', 'Khan', 'Miah', 'Hasan', 'Rahman', 'Kabir', 'Alam', 'Sarker',
+      'Begum', 'Akter', 'Uddin', 'Islam', 'Biswas', 'Patwary', 'Mazumder', 'Talukder', 'Bhuiyan', 'Mollah',
+      'Barman', 'Das', 'Paul', 'Chakma', 'Roy', 'Dewan', 'Siddique', 'Faruk', 'Jamal', 'Nasir',
+      'Bashar', 'Shah', 'Sami', 'Nazmul', 'Shikder', 'Nawaz', 'Mahmud', 'Zaman', 'Arafat', 'Tarique',
+      'Sharif', 'Selim', 'Ferdous', 'Rafiq', 'Kamal', 'Alvi', 'Rubayet', 'Mostofa', 'Shahriar', 'Monir'
+    ];
+
+    function generateName() {
+      const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+      document.getElementById('name').innerText = first + ' ' + last;
+    }
+  </script>
+</body>
+</html>
