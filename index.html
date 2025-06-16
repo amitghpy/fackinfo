@@ -8,15 +8,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Poppins:wght@400;600&display=swap');
   
   :root {
-    --bg-grad-start: #0f2027;
-    --bg-grad-mid: #203a43;
-    --bg-grad-end: #2c5364;
-    --card-bg: rgba(255, 255, 255, 0.08);
-    --card-hover-bg: rgba(255, 255, 255, 0.15);
-    --text-color: #f0f0f0;
-    --accent-color: #1dd1a1;
-    --accent-dark-color: #10ac84;
-    --shadow-color: rgba(0, 0, 0, 0.3);
+    --bg-color: #010409;
+    --primary-glow: rgba(45, 212, 191, 0.3);
+    --secondary-glow: rgba(59, 130, 246, 0.2);
+    --card-bg: rgba(22, 27, 34, 0.5);
+    --card-border-color: rgba(255, 255, 255, 0.1);
+    --text-color: #e6edf3;
+    --text-secondary: #7d8590;
+    --accent-color: #2dd4bf;
+    --accent-hover: #5eead4;
     --font-primary: 'Poppins', 'Hind Siliguri', sans-serif;
     --font-bengali: 'Hind Siliguri', sans-serif;
   }
@@ -27,8 +27,16 @@
     padding: 0;
   }
 
+  @keyframes background-pan {
+    from { background-position: 0% center; }
+    to { background-position: -200% center; }
+  }
+
   body {
-    background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-mid), var(--bg-grad-end));
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, var(--bg-color) 25%, var(--secondary-glow) 50%, var(--bg-color) 75%, var(--primary-glow) 100%);
+    background-size: 200% 200%;
+    animation: background-pan 20s linear infinite;
     font-family: var(--font-primary);
     color: var(--text-color);
     display: flex;
@@ -38,268 +46,418 @@
     min-height: 100vh;
     padding: 2rem 1rem;
     text-align: center;
+    overflow-x: hidden;
+  }
+
+  /* --- Main Structure & Titles --- */
+  .main-container {
+    width: 100%;
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  @media (min-width: 820px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-container {
+      grid-column: 1 / -1;
   }
 
   .main-title {
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     font-weight: 600;
-    margin-bottom: 2rem;
-    text-shadow: 0 4px 10px var(--shadow-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #ffffff, var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+  }
+
+  /* --- Generator Card --- */
   .generator-container {
     background: var(--card-bg);
     border-radius: 16px;
     padding: 2rem;
-    margin-bottom: 1.5rem;
-    width: 100%;
-    max-width: 600px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 var(--shadow-color);
-    transition: transform 0.3s ease;
+    border: 1px solid var(--card-border-color);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
-    
-  .generator-container:hover {
-      transform: translateY(-5px);
+  
+  .generator-container::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      z-index: -1;
+      margin: -1px; 
+      border-radius: inherit; 
+      background: linear-gradient(135deg, var(--accent-color), transparent, var(--accent-hover));
+      opacity: 0;
+      transition: opacity 0.5s ease;
+  }
+  .generator-container:hover::before {
+      opacity: 0.3;
+  }
+  
+  .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
   }
 
   h2 {
-    margin-bottom: 1rem;
     font-weight: 600;
     font-size: 1.5rem;
+    color: #fff;
+  }
+  
+  /* --- Options (Radio/Select) --- */
+  .options-group {
+      display: flex;
+      gap: 0.5rem;
+  }
+
+  .options-group label, .options-group select {
+      font-family: var(--font-bengali);
+      font-size: 1rem;
+      color: var(--text-secondary);
+      background: rgba(0,0,0,0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+  
+  .options-group select {
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 2rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237d8590' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+  }
+  
+  .options-group select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px var(--primary-glow);
+  }
+  
+  /* Style for dropdown options */
+  select option {
+      background: #0d1117;
+      color: var(--text-color);
+  }
+  
+  .options-group label:has(input:checked) {
+      color: #fff;
+      background: rgba(45, 212, 191, 0.2);
+      border-color: var(--accent-color);
+  }
+  
+  .options-group input[type="radio"] { display: none; }
+  
+  /* --- Output Area --- */
+  @keyframes text-pop-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0px); }
   }
 
   .output-area {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
-    padding: 1rem 1.5rem;
-    font-size: 1.8rem;
-    user-select: none;
+    padding: 1rem;
     margin-bottom: 1.5rem;
     display: flex;
-    gap: 1rem;
     justify-content: center;
     align-items: center;
-    word-break: break-all;
-    flex-wrap: wrap;
+    position: relative;
+    border: 1px solid var(--card-border-color);
+    flex-grow: 1;
   }
   
-  .output-area.bengali {
-      font-family: var(--font-bengali);
+  .output-text {
       font-size: 2rem;
+      user-select: none;
+      color: #fff;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: text-pop-in 0.5s ease;
   }
-  
+
+  .output-area.bengali .output-text {
+      font-family: var(--font-bengali);
+      font-size: 2.2rem;
+  }
+
   .name-part {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
   }
   .name-part:hover {
-      background: var(--card-hover-bg);
+      background-color: rgba(45, 212, 191, 0.2);
+      color: var(--accent-hover);
   }
-
-  #bdNumberOutput {
-      cursor: pointer;
-      transition: background 0.3s ease;
-  }
-  #bdNumberOutput:hover {
-      background: var(--card-hover-bg);
-  }
-
+  
+  /* --- Generate Button --- */
   .generate-btn {
     background: var(--accent-color);
     border: none;
     border-radius: 50px;
-    padding: 0.8rem 2.5rem;
+    padding: 0.9rem 1.5rem;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--bg-grad-start);
+    color: #010409;
     cursor: pointer;
-    box-shadow: 0 6px 12px rgba(29, 209, 161, 0.3);
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     font-family: var(--font-bengali);
+    align-self: center;
   }
 
   .generate-btn:hover {
-    background: var(--accent-dark-color);
+    background: var(--accent-hover);
     transform: scale(1.05);
+    box-shadow: 0 0 20px var(--primary-glow);
   }
-
+  .generate-btn:active {
+      transform: scale(1.02);
+  }
+  .generate-btn svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.5s ease;
+  }
+  .generate-btn:hover svg {
+      transform: rotate(180deg);
+  }
+  
+  /* --- Toast Notification --- */
   .toast {
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--accent-dark-color);
-    color: #fff;
+    background: #161b22;
+    color: var(--accent-color);
     padding: 12px 24px;
-    border-radius: 24px;
+    border-radius: 8px;
     font-weight: 600;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 1000;
     font-family: var(--font-bengali);
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 20px var(--primary-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(-20px);
-    pointer-events: auto;
   }
+  .toast .icon { display: inline-block; }
 
+  /* --- Footer --- */
   footer {
     margin-top: 2rem;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .footer-link {
-    color: inherit;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.3s ease;
-  }
-  .footer-link:hover {
-      color: var(--accent-color);
-  }
-  .footer-link svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
+    color: var(--text-secondary);
+    animation: fadeIn 1s 0.5s ease-out forwards;
+    opacity: 0;
+    grid-column: 1 / -1;
   }
 </style>
 </head>
 <body>
 
-<h1 class="main-title">ফেইক নাম ও নম্বর জেনারেটর</h1>
+<div class="main-container">
+    <div class="header-container">
+        <h1 class="main-title">ফেইক জেনারেটর প্রো</h1>
+        <p class="subtitle">আপনার ডিজিটাল প্রোফাইলের জন্য র‍্যান্ডম বাংলা নাম ও নম্বর তৈরি করুন</p>
+    </div>
 
-<div class="generator-container">
-  <h2>English Fake Name (ইংরেজি ফেইক নাম)</h2>
-  <div class="output-area">
-      <div class="name-part" id="firstName"></div>
-      <div class="name-part" id="lastName"></div>
-  </div>
-  <button id="generateEnglishBtn" class="generate-btn">জেনারেট</button>
+    <div class="generator-container">
+      <div class="card-header">
+        <h2>বাংলা নাম</h2>
+        <div class="options-group">
+          <label><input type="radio" name="gender" value="male" checked> পুরুষ</label>
+          <label><input type="radio" name="gender" value="female"> মহিলা</label>
+        </div>
+      </div>
+      <div class="output-area bengali">
+        <div class="output-text" id="bengaliNameOutput">
+            <span class="name-part" id="bengaliFirstName"></span>
+            <span class="name-part" id="bengaliLastName"></span>
+        </div>
+      </div>
+      <button id="generateBengaliBtn" class="generate-btn">
+        <span>নতুন নাম</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+      </button>
+    </div>
+
+    <div class="generator-container">
+      <div class="card-header">
+        <h2>বাংলাদেশী নম্বর</h2>
+      </div>
+      <div class="output-area">
+          <div class="output-text" id="bdNumberOutput"></div>
+      </div>
+       <div class="options-group" style="margin-top: -0.5rem; margin-bottom: 1.5rem;">
+            <select id="numberPrefix">
+                <option value="019">019 - Banglalink</option>
+                <option value="017">017 - Grameenphone</option>
+                <option value="018">018 - Robi</option>
+                <option value="016">016 - Airtel</option>
+                <option value="015">015 - Teletalk</option>
+                <option value="013">013 - Grameenphone</option>
+                <option value="014">014 - Banglalink</option>
+            </select>
+        </div>
+      <button id="generateNumberBtn" class="generate-btn">
+        <span>নতুন নম্বর</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+      </button>
+    </div>
+
+    <footer>
+        <a href="https://t.me/MrGhosh75" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); text-decoration: none;">
+            Developed by @MrGhosh75
+        </a>
+    </footer>
 </div>
 
-<div class="generator-container">
-  <h2>Bangla Fake Name (বাংলা ফেইক নাম)</h2>
-  <div class="output-area bengali">
-      <div class="name-part" id="bengaliFirstName"></div>
-      <div class="name-part" id="bengaliLastName"></div>
-  </div>
-  <button id="generateBengaliBtn" class="generate-btn">জেনারেট</button>
+<div id="toast" class="toast">
+    <span class="icon" id="toastIcon"></span>
+    <span id="toastText"></span>
 </div>
-
-<div class="generator-container">
-  <h2>Bangladeshi Number (বাংলাদেশী নম্বর)</h2>
-  <div id="bdNumberOutput" class="output-area"></div>
-  <button id="generateNumberBtn" class="generate-btn">জেনারেট</button>
-</div>
-
-<div id="toast" class="toast">কপি করা হয়েছে!</div>
-
-<footer>
-    <a href="https://t.me/MrGhosh75" target="_blank" rel="noopener noreferrer" class="footer-link">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L14.24 16l-3.2 3.14c-.34.35-.64.66-1.26.61z"/></svg>
-        <span>Developed by @MrGhosh75</span>
-    </a>
-</footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
   // --- DATA ---
-  const englishFirstNames = [...new Set([
-    "James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles", "Christopher","Daniel","Matthew","Anthony","Donald","Mark","Paul","Steven","Andrew","Kenneth", "Joshua","Kevin","Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan", "Jacob","Gary","Nicholas","Eric","Stephen","Jonathan","Larry","Justin","Scott","Brandon", "Benjamin","Samuel","Gregory","Frank","Alexander","Raymond","Patrick","Jack","Dennis","Jerry", "Tyler","Aaron","Jose","Henry","Douglas","Peter","Adam","Nathan","Zachary","Walter"
-  ])];
-
-  const englishLastNames = [...new Set([
-    "Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez", "Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin", "Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson", "Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores", "Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts"
-  ])];
-
-  const bengaliFirstNames = [
-    "আকাশ","আরিফ","আলম","আবিদ","আশিক","ইমরান","ইমন","হাসান","জামাল","কামাল", "করিম","খালেদ","তারেক","তামিম","দিপু","নাসির","নাহিদ","ফরহাদ","ফারুক","বাপ্পি", "বিপ্লব","মাসুদ","মিজান","মুশফিক","মেহেদী","রনি","রাজু","রাসেল","রাকিব","রিপন", "সাকিব","সাজিদ","সাগর","সিয়াম","সুমন","সোহেল","হৃদয়","আয়েশা","আখি","জান্নাত", "জেসমিন","তানিয়া","তাসনিয়া","নাদিয়া","নাসরিন","নিপা","নুসরাত","ফাতেমা","ফারিয়া", "শারমিন","শিলা","শিমু","সাদিয়া","সুমি","সুমাইয়া"
-  ];
-
-  const bengaliLastNames = [
-    "খান","চৌধুরী","সরকার","শেখ","আহমেদ","ইসলাম","রহমান","হোসেন","আকন্দ","মণ্ডল", "তালুকদার","পাটোয়ারী","বিশ্বাস","মোল্লা","শিকদার","মিয়া","হক","উদ্দিন","কবির"
-  ];
+  const bengaliMaleFirstNames = [...new Set(["রাজু", "আজিম", "শাকিল", "আনিস", "তৌহিদ", "মিলন", "রাহুল", "ইয়ামিন", "রিজভী", "নাঈম", "রেজওয়ান", "কামরুল", "সোহেল", "জুবায়ের", "আশিক", "অপু", "মাসুদ", "আনোয়ার", "নওশাদ", "বেলাল", "ওমর", "সুমন", "সাইমন", "রুবেল", "হোসেন", "ইমন", "শরীফ", "নাজমুল", "রাসেল", "ইফতেখার", "শহিদুল", "জাহাঙ্গীর", "রিফাত", "সাজিদ", "তানজিম", "খালেদ", "সাইদ", "আজহার", "মিনহাজ", "ফরহাদ", "তাহসিন", "আরমান", "হাসিব", "জিসান", "রায়েদ", "সিফাত", "হিমেল", "নাজিম", "সাবির", "তৌফিক", "কামাল", "সামিউল", "জোবায়ের", "রফিকুল", "মনির", "কাওসার", "রেহান", "নাদিম", "আশরাফ", "জুবাইর", "মাসরুর", "সজীব", "রবিউল", "হাসনাত", "মাহিম", "তামিম", "রুশদী", "ইয়াছিন", "তারেক", "আতিক", "আবিদ", "শাহরিয়ার", "সৈয়দ", "মাসুম", "শোভন", "সাদমান", "তানভিরুল", "মাহাদি", "অর্ণব", "রাফি", "রাহি", "সানজিদ", "নাইমুল", "মিনহাজুল", "লিমন", "তানভীল", "নাইমুর", "মেহেদী", "সুমাইর", "মাহি", "নুরুল", "সোহান", "ফাহিম", "আরাফাত", "সামি", "রাকিন", "ইব্রাহিম", "ফুয়াদ", "আমান", "রাশেদ", "জাহিদুল", "সালমান", "সজল", "মুনতাসির", "অনিক", "কিবরিয়া", "আসিফ", "মারজান", "সাব্বিরুল", "জাফর", "সাফওয়ান", "আদনান", "শরিফুল", "হাসিবুল", "সাদিক", "আমিনুল", "মাইনুল", "তোহা", "শাহিন", "রফিকুজ্জামান", "দেলোয়ার", "মিজান", "রুহুল", "মোস্তাফিজ", "মাহমুদুল", "আজিজ", "নাজিব", "আবু বকর", "ইমতিয়াজ", "ফয়েজ", "আরশাদ", "বদরুল", "মনজুর", "মাহির", "আরিফুল", "মনসুর", "লুৎফর", "গোলাম", "শামসুল", "কামালউদ্দিন", "হেলাল", "জুবায়েরুল", "রাব্বানী", "মাহফুজ", "রুহুল আমিন", "জহিরুল", "খালিদ", "সামিউর", "আদিল", "আমিরুল", "মাসউদ", "শফিক", "আরাফ", "রেদওয়ান", "নাহিয়ান", "শাওন", "মুসফিক", "ইফতি", "আবু হাসান", "আবদুল্লাহ", "ফারুক", "সানিউল্লাহ", "আরিফিন", "ইয়াসিন", "সাদ", "ইলিয়াস", "মামুনুর", "রুহুল্লাহ", "সাইফুল", "আলমগীর", "জহির", "আজমল", "ওয়ালিদ", "রায়হানুল", "মাহিরুল", "আজহারুল", "সাকিব", "জুয়েল", "রায়হানুর", "আরিফ", "রাকিব", "তানভীর", "সাইফ", "ফারহান", "শুভ", "হাসান", "তানিম", "রায়হান", "মামুন", "রফিক"])];
+  const bengaliFemaleFirstNames = [...new Set(["আনিকা", "আফসানা", "নিশাত", "রাইসা", "মৌ", "সাদিয়া", "মিম", "তানিয়া", "জুঁই", "শারমিন", "রাফিয়া", "লাবণী", "তাহমিনা", "নীলা", "ইরা", "সানজিদা", "আয়েশা", "খুশি", "ফারহানা", "রাবেয়া", "নুসরাত", "শাম্মী", "ইফফাত", "মেহজাবিন", "মাহজাবিন", "কনা", "চৈতি", "সুমাইয়া", "রিমি", "রাইশা", "শিলা", "মুনমুন", "রোদেলা", "রুহি", "বৃষ্টি", "সুবর্ণা", "হৃদি", "উর্মি", "তমা", "দৃষ্টি", "ফারিয়া", "মেহরিন", "সুইটি", "স্নিগ্ধা", "কুসুম", "অনন্যা", "মারিয়া", "মাহিরা", "রাইহানা", "সাবরিনা", "ইসরাত", "নোভা", "জেনি", "সাবিকুন", "প্রিয়াংকা", "নিঝুম", "সিনথিয়া", "ছন্দা", "সামিয়া", "মিমি", "প্রিয়া", "তৃষা", "তিথি", "অহনা", "পারমিতা", "নীড়", "শিউলি", "রিতা", "আরফা", "মালা", "শাপলা", "কেয়া", "ডালিয়া", "ফারজানা", "জ্যোতি", "পারুল", "হালিমা", "ইয়াসমিন", "ছালমা", "সোনিয়া", "সুলতানা", "মিনু", "ঝরনা", "শেফালী", "সুমনা", "রওশন", "চামেলী", "হেনা", "রোখসানা", "লায়লা", "রুপা", "রুবি", "বিলকিস", "ফিরোজা", "জেসমিন", "জান্নাত", "নাহিদা", "আরজু", "শবনম", "রেহানা", "কনিকা", "কামরুন্নাহার", "শারিয়া", "তাসনিম", "জুহরা", "আনোয়ারা", "ফারহিনা", "রুকাইয়া", "মাসুমা", "হাসনা", "মাহিয়া", "মুশফিকা", "জাবেদা", "সাজেদা", "রহিমা", "করিমা", "নাজনীন", "জুয়েলি", "তানজিলা", "শার্লিন", "লিপি", "পপি", "মানসী", "ঐশী", "মায়া", "তানজিমা", "আজমেরী", "মুক্তা", "শানু", "মানতাসা", "সায়মা", "তাহসীন", "লিমা", "নাদিয়া", "জুহি", "নওরীন", "আফরিন", "রুকসানা", "মিনহা", "নিশু", "শামা", "রুহানি", "তাসফিয়া", "অর্ণিলা", "সাবা", "মাইশা", "হুরিয়া", "তামান্না", "জারিন", "শারমিলা", "লায়না", "নাবিলা", "জান্নাতুল", "সাফা", "সাদফা", "তাবাসসুম", "রেশমা", "তৌহিদা", "ফাহমিদা", "রাইহা", "ইমেনা", "সোহা", "রুহিন", "দিয়া", "আঁখি", "জান্নাতি", "রুজি", "তাহিয়া", "স্নেহা", "কান্তা", "জেনিফার", "সাবিনা", "পারভীন", "রুমানা", "তানহা", "ফাইজা", "ছায়া", "রুপালি", "শিরীন", "কুমারী", "হাসিনা", "কল্পনা", "লতা", "পুষ্প", "খালেদা", "ফারজিন", "নাসরিন", "খুশবু", "ফারহানাহ", "মুনিয়া", "আফিয়া", "আয়রা", "উম্মে", "সায়রা", "ইমা"])];
+  const bengaliMaleLastNames = ["রহমান", "হোসেন", "ইসলাম", "আহমেদ", "চৌধুরী", "সিদ্দিকী", "মল্লিক", "সর্দার", "ভুঁইয়া", "কাজী"];
+  const bengaliFemaleLastNames = ["আক্তার", "বেগম", "পারভীন", "সুলতানা", "রহমান", "হোসেন", "খাতুন", "ইসলাম", "চৌধুরী", "মল্লিক"];
 
   // --- DOM ELEMENTS ---
   const toast = document.getElementById('toast');
-  
-  // English
-  const firstNameDiv = document.getElementById('firstName');
-  const lastNameDiv = document.getElementById('lastName');
-  const generateEnglishBtn = document.getElementById('generateEnglishBtn');
-  
-  // Bengali
+  const toastIcon = document.getElementById('toastIcon');
+  const toastText = document.getElementById('toastText');
   const bengaliFirstNameDiv = document.getElementById('bengaliFirstName');
   const bengaliLastNameDiv = document.getElementById('bengaliLastName');
+  const bengaliNameOutput = document.getElementById('bengaliNameOutput');
   const generateBengaliBtn = document.getElementById('generateBengaliBtn');
-  
-  // Number
+  const genderRadios = document.querySelectorAll('input[name="gender"]');
   const bdNumberOutputDiv = document.getElementById('bdNumberOutput');
   const generateNumberBtn = document.getElementById('generateNumberBtn');
+  const numberPrefixSelect = document.getElementById('numberPrefix');
+
+  // --- ICONS ---
+  const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`;
 
   // --- UTILITY FUNCTIONS ---
-  function getRandom(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
+  const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  function showToast(msg) {
-    toast.textContent = msg;
+  const showToast = (msg) => {
+    toastIcon.innerHTML = checkIcon;
+    toastText.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
-  }
+  };
     
-  function copyToClipboard(text, message) {
+  const copyToClipboard = (text, message) => {
       if(!text) return;
       navigator.clipboard.writeText(text).then(() => {
           showToast(message);
       }).catch(err => {
           console.error('Failed to copy: ', err);
-          showToast('কপি করতে ব্যর্থ');
+          toastText.textContent = 'কপি করতে ব্যর্থ';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
       });
+  };
+
+  const addAnimation = (element) => {
+      element.style.animation = 'none';
+      element.offsetHeight; // Trigger reflow
+      element.style.animation = 'text-pop-in 0.5s ease';
   }
 
-  // --- GENERATOR LOGIC & EVENT LISTENERS ---
+  // --- GENERATOR LOGIC ---
+  const generateBengaliName = () => {
+    const selectedGender = document.querySelector('input[name="gender"]:checked').value;
+    const firstNameList = selectedGender === 'male' ? bengaliMaleFirstNames : bengaliFemaleFirstNames;
+    const lastNameList = selectedGender === 'male' ? bengaliMaleLastNames : bengaliFemaleLastNames;
+    
+    bengaliFirstNameDiv.textContent = getRandom(firstNameList);
+    bengaliLastNameDiv.textContent = getRandom(lastNameList);
+    addAnimation(bengaliNameOutput);
+  };
 
-  // 1. English Name Generator
-  function generateEnglishName() {
-    firstNameDiv.textContent = getRandom(englishFirstNames);
-    lastNameDiv.textContent = getRandom(englishLastNames);
-  }
-  generateEnglishBtn.addEventListener('click', generateEnglishName);
-  firstNameDiv.addEventListener('click', () => copyToClipboard(firstNameDiv.textContent, `প্রথম নাম "${firstNameDiv.textContent}" কপি হয়েছে!`));
-  lastNameDiv.addEventListener('click', () => copyToClipboard(lastNameDiv.textContent, `শেষ নাম "${lastNameDiv.textContent}" কপি হয়েছে!`));
-
-  // 2. Bengali Name Generator
-  function generateBengaliName() {
-    bengaliFirstNameDiv.textContent = getRandom(bengaliFirstNames);
-    bengaliLastNameDiv.textContent = getRandom(bengaliLastNames);
-  }
-  generateBengaliBtn.addEventListener('click', generateBengaliName);
-  bengaliFirstNameDiv.addEventListener('click', () => copyToClipboard(bengaliFirstNameDiv.textContent, `প্রথম নাম "${bengaliFirstNameDiv.textContent}" কপি হয়েছে!`));
-  bengaliLastNameDiv.addEventListener('click', () => copyToClipboard(bengaliLastNameDiv.textContent, `শেষ নাম "${bengaliLastNameDiv.textContent}" কপি হয়েছে!`));
-
-  // 3. Bangladeshi Number Generator
-  function generateBdNumber() {
+  const generateBdNumber = () => {
+    const prefix = numberPrefixSelect.value;
     const randomDigits = Math.floor(10000000 + Math.random() * 90000000);
-    bdNumberOutputDiv.textContent = '019' + randomDigits.toString();
-  }
+    bdNumberOutputDiv.textContent = prefix + randomDigits.toString();
+    addAnimation(bdNumberOutputDiv);
+  };
+
+  // --- EVENT LISTENERS ---
+  generateBengaliBtn.addEventListener('click', generateBengaliName);
+  genderRadios.forEach(radio => radio.addEventListener('change', generateBengaliName));
+  
   generateNumberBtn.addEventListener('click', generateBdNumber);
-  bdNumberOutputDiv.addEventListener('click', () => copyToClipboard(bdNumberOutputDiv.textContent, `নম্বর "${bdNumberOutputDiv.textContent}" কপি হয়েছে!`));
+  numberPrefixSelect.addEventListener('change', generateBdNumber);
+
+  // Individual copy listeners
+  bengaliFirstNameDiv.addEventListener('click', () => {
+      copyToClipboard(bengaliFirstNameDiv.textContent, `"${bengaliFirstNameDiv.textContent}" কপি হয়েছে!`);
+  });
+  bengaliLastNameDiv.addEventListener('click', () => {
+      copyToClipboard(bengaliLastNameDiv.textContent, `"${bengaliLastNameDiv.textContent}" কপি হয়েছে!`);
+  });
+  bdNumberOutputDiv.addEventListener('click', () => {
+      copyToClipboard(bdNumberOutputDiv.textContent, `"${bdNumberOutputDiv.textContent}" কপি হয়েছে!`);
+  });
+  
 
   // --- INITIAL GENERATION ON LOAD ---
-  generateEnglishName();
   generateBengaliName();
   generateBdNumber();
 
